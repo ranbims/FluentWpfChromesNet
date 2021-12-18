@@ -195,6 +195,11 @@ namespace FluentWpfChromes
             }
         }
 
+        /// <summary>
+        /// Check if the OS support Aero Glass Blur.
+        /// More version details could be checked here:
+        /// https://docs.microsoft.com/en-us/windows/win32/sysinfo/operating-system-version
+        /// </summary>
         private bool IsGlassBlurSupported()
         {
             var version = Environment.OSVersion.Version;
