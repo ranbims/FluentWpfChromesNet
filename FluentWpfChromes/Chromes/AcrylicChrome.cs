@@ -183,17 +183,22 @@ namespace FluentWpfChromes
         /// </summary>
         public override void EnableBlur()
         {
-
             var hWnd = HWndSource.Handle;
-
-            if (Environment.OSVersion.Version.Major >= 6)
+            if (IsGlassBlurSupported())
             {
-                if (Environment.OSVersion.Version.Minor > 1)
-                    AeroGlassBlurrier.EnableBlur(hWnd, AccentState.ACCENT_ENABLE_ACRYLICBLURBEHIND, gbrColor);
-                else
-                    VistaGlassBlurrier.ExtendGlassFrame(hWnd,
-                        new Thickness(-1)); //Check system Framework brfore compiling !!!
+                AeroGlassBlurrier.EnableBlur(hWnd, AccentState.ACCENT_ENABLE_ACRYLICBLURBEHIND, gbrColor);
             }
+            else
+            {
+                VistaGlassBlurrier.ExtendGlassFrame(hWnd,
+                    new Thickness(-1)); //Check system Framework brfore compiling !!!
+            }
+        }
+
+        private bool IsGlassBlurSupported()
+        {
+            var version = Environment.OSVersion.Version;
+            return (version.Major == 6 && version.Minor > 1) || version.Major >= 10;
         }
 
         private bool atFirstTime = true;
@@ -204,14 +209,14 @@ namespace FluentWpfChromes
         /// </summary>
         public override void DisableBlur()
         {
-            #region windows BUG fix
+#region windows BUG fix
             if (atFirstTime) //windows BUG fix
             {
                 atFirstTime = false;
                 DisableBlur();
                 EnableBlur();
             }
-            #endregion
+#endregion
 
             var hWnd = HWndSource.Handle;
 
